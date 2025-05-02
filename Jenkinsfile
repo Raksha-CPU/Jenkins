@@ -20,4 +20,21 @@ pipeline {
         stage('Archive Test Results') {
             steps {
                 junit 'reports/test/test_report.xml'
-                publishHTML(target
+
+                script {
+                    publishHTML([
+                        reportDir: 'cov/cov_html',
+                        reportFiles: 'index.html',
+                        reportName: 'Code Coverage Report'
+                    ])
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'cov/cov.xml', fingerprint: true
+        }
+    }
+}
